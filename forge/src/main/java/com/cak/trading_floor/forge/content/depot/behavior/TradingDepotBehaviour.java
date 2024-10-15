@@ -49,6 +49,8 @@ public class TradingDepotBehaviour extends BlockEntityBehaviour implements Commo
     
     VersionedInventoryTrackerBehaviour invVersionTracker;
     
+    boolean pruneEmptyStacksNextTick = false;
+    
     public TradingDepotBehaviour(SmartBlockEntity be) {
         super(be);
         itemHandler = new TradingDepotItemHandler(this);
@@ -63,6 +65,15 @@ public class TradingDepotBehaviour extends BlockEntityBehaviour implements Commo
         
         Level world = blockEntity.getLevel();
         if (world == null) return;
+        
+        if (pruneEmptyStacksNextTick) {
+            result = new ArrayList<>(
+                result.stream()
+                    .filter(stack -> !stack.isEmpty())
+                    .toList()
+            );
+            pruneEmptyStacksNextTick = false;
+        }
         
         for (Iterator<TransportedItemStack> iterator = incoming.iterator(); iterator.hasNext(); ) {
             TransportedItemStack ts = iterator.next();
@@ -87,6 +98,10 @@ public class TradingDepotBehaviour extends BlockEntityBehaviour implements Commo
         if (offer == null)
             return;
         tick(offer);
+    }
+    
+    public void doPruneEmptyStacksNextTick() {
+        pruneEmptyStacksNextTick = true;
     }
     
     protected boolean tick(TransportedItemStack input) {

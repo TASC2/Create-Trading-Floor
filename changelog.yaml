@@ -17,4 +17,6 @@
   - Added forge update checker
 1.20.1-1.1.0: |
   - Implemented multiloader capabilities (fabric port)
+1.20.1-1.1.1: |
+  - Fixed a crash on fabric and forge when using brass funnels
 ...
