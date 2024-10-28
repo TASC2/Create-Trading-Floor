@@ -73,6 +73,7 @@ public class TradingDepotBehaviour extends BlockEntityBehaviour implements Commo
             result = new ArrayList<>(result.stream()
                 .filter(stack -> !stack.isEmpty())
                 .toList());
+            pruneResultStackNextTick = false;
         }
         
         for (Iterator<TransportedItemStack> iterator = incoming.iterator(); iterator.hasNext(); ) {

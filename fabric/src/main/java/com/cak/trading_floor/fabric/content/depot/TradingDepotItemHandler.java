@@ -17,56 +17,7 @@ public class TradingDepotItemHandler implements Storage<ItemVariant> {
     public TradingDepotItemHandler(TradingDepotBehaviour behaviour) {
         this.behaviour = behaviour;
     }
-//
-//    @Override
-//    public int getSlots() {
-//        return 1 + behaviour.getResults().size();
-//    }
-//
-//    @Override
-//    public @NotNull ItemStack getStackInSlot(int i) {
-//        return i == 0 ? behaviour.getOfferStack() : behaviour.getResults().get(i - 1);
-//    }
-//
-//    @Override
-//    public @NotNull ItemStack insertItem(int i, @NotNull ItemStack arg, boolean bl) {
-//        if (i != 0) return arg;
-//
-//        if (!behaviour.getOfferStack().isEmpty() && !ItemHandlerHelper.canItemStacksStack(behaviour.getOfferStack(), arg))
-//            return arg;
-//
-//        ItemStack incomingStack = behaviour.getOfferStack();
-//
-//        int newCount = Math.min(incomingStack.getMaxStackSize(), incomingStack.getCount() + arg.getCount());
-//        int added = newCount - incomingStack.getCount();
-//        int remaining = arg.getCount() - added;
-//
-//        if (!bl) {
-//            behaviour.setOfferStack(new TransportedItemStack(arg.copyWithCount(newCount)));
-//            behaviour.blockEntity.sendData();
-//        }
-//
-//        return arg.copyWithCount(remaining);
-//    }
-//
-//    @Override
-//    public @NotNull ItemStack extractItem(int i, int j, boolean bl) {
-//    }
-//
-//    @Override
-//    public int getSlotLimit(int i) {
-//        return 64;
-//    }
-//
-//    @Override
-//    public boolean isItemValid(int i, @NotNull ItemStack arg) {
-//        return true;
-//    }
 
-//    public ItemStack insertTransportedStack(TransportedItemStack transportedItemStack, Direction direction, boolean b) {
-//        return insert(transportedItemStack.stack, transportedItemStack.stack.getCount(),);
-//    }
-    
     @Override
     public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
         ItemStack currentStack = behaviour.getOfferStack();
@@ -112,10 +63,8 @@ public class TradingDepotItemHandler implements Storage<ItemVariant> {
         int finalTargetIndex = targetIndex;
         transaction.addCloseCallback((context, result) -> {
             if (result.wasCommitted()) {
-                if (remainderStack.isEmpty())
-                    this.behaviour.getResults().remove(finalTargetIndex);
-                else
-                    this.behaviour.getResults().set(finalTargetIndex, remainderStack);
+                this.behaviour.getResults().set(finalTargetIndex, remainderStack);
+                this.behaviour.queueResultStackPrune();
                 behaviour.blockEntity.sendData();
             }
         });

@@ -55,6 +55,8 @@ public class TradingDepotItemHandler implements IItemHandler {
         if (i == 0) return ItemStack.EMPTY;
         
         int listIndex = i - 1;
+        if (listIndex >= behaviour.getResults().size()) return ItemStack.EMPTY;
+        
         ItemStack currentStack = behaviour.getResults().get(listIndex);
         
         int extractedCount = Math.min(currentStack.getCount(), j);
@@ -63,10 +65,8 @@ public class TradingDepotItemHandler implements IItemHandler {
         ItemStack remainderStack = currentStack.copyWithCount(currentStack.getCount() - extractedCount);
         
         if (!bl) {
-            if (remainderStack.isEmpty())
-                this.behaviour.getResults().remove(listIndex);
-            else
-                this.behaviour.getResults().set(listIndex, remainderStack);
+            this.behaviour.getResults().set(listIndex, remainderStack);
+            this.behaviour.doPruneEmptyStacksNextTick();
             behaviour.blockEntity.sendData();
         }
         
