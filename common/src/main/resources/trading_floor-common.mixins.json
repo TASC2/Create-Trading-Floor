@@ -6,6 +6,7 @@
   "client": [
   ],
   "mixins": [
+    "WorkAtComposterMixin",
     "WorkAtPoiMixin",
     "item_listings.DyedArmorForEmeraldsAccessMixin",
     "item_listings.EmeraldForItemsAccessMixin",
