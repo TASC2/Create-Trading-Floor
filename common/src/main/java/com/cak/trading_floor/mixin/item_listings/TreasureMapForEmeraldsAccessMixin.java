@@ -1,6 +1,7 @@
 package com.cak.trading_floor.mixin.item_listings;
 
 import com.cak.trading_floor.compat.jei.virtual_recipes.potential_villager_trade.PotentialMerchantOfferInfo;
+import com.cak.trading_floor.foundation.ItemCopyWithCount;
 import com.cak.trading_floor.foundation.access.ResolvableItemListing;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -29,7 +30,7 @@ public class TreasureMapForEmeraldsAccessMixin implements ResolvableItemListing 
         mapStack.setHoverName(Component.translatable(displayName));
         
         return new PotentialMerchantOfferInfo(
-            Items.EMERALD.getDefaultInstance().copyWithCount(emeraldCost),
+            ItemCopyWithCount.of(Items.EMERALD.getDefaultInstance(), emeraldCost),
             Items.COMPASS.getDefaultInstance(),
             mapStack
         );

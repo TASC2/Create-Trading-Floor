@@ -6,6 +6,7 @@ import com.cak.trading_floor.content.trading_depot.CommonTradingDepotBlockEntity
 import com.cak.trading_floor.content.trading_depot.TradingDepotRenderer;
 import com.cak.trading_floor.content.trading_depot.displays.CurrentTradeCompletedCountDisplay;
 import com.cak.trading_floor.content.trading_depot.displays.TradeProductSumDisplay;
+import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -25,7 +26,9 @@ public class TFRegistry {
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.getEntry(), AssetLookup.standardModel(ctx, prov)))
         .onRegister(AllDisplayBehaviours.assignDataBehaviour(new TradeProductSumDisplay(), "trade_product_sum"))
         .onRegister(AllDisplayBehaviours.assignDataBehaviour(new CurrentTradeCompletedCountDisplay(), "trade_completed_count"))
-        .simpleItem()
+        .item()
+        .tab(() -> AllCreativeModeTabs.BASE_CREATIVE_TAB)
+        .build()
         .register();
     
     public static final BlockEntityEntry<CommonTradingDepotBlockEntity> TRADING_DEPOT_BLOCK_ENTITY = REGISTRATE

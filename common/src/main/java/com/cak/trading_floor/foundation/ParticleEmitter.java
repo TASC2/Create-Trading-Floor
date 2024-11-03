@@ -2,8 +2,8 @@ package com.cak.trading_floor.foundation;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -31,7 +31,7 @@ public class ParticleEmitter {
     }
     
     public void emitToClients(ServerLevel level, Vec3 origin, int count) {
-        TFPlatformPackets.sendEmitParticlesToNear(level, this, origin, count, BlockPos.containing(origin), sendPacketRange);
+        TFPlatformPackets.sendEmitParticlesToNear(level, this, origin, count, new BlockPos(origin), sendPacketRange);
     }
     
     public void emitParticles(ClientLevel level, Vec3 origin, int count) {
@@ -121,7 +121,7 @@ public class ParticleEmitter {
     
     @Override
     public int hashCode() {
-        return Objects.hash(BuiltInRegistries.PARTICLE_TYPE.getKey(particleType), volume, randomVelocityStrength, emitFromCenterStrength, sendPacketRange);
+        return Objects.hash(Registry.PARTICLE_TYPE.getKey(particleType), volume, randomVelocityStrength, emitFromCenterStrength, sendPacketRange);
     }
     
     public interface ParticleDataConsumer {

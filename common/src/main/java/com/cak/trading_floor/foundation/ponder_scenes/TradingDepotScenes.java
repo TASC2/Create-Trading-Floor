@@ -1,6 +1,7 @@
 package com.cak.trading_floor.foundation.ponder_scenes;
 
 import com.cak.trading_floor.content.trading_depot.CommonTradingDepotBlockEntity;
+import com.cak.trading_floor.foundation.ItemCopyWithCount;
 import com.cak.trading_floor.registry.TFParticleEmitters;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.ponder.ElementLink;
@@ -53,7 +54,7 @@ public class TradingDepotScenes {
         scene.idle(80);
         
         scene.world.modifyBlockEntity(new BlockPos(1, 1, 1), CommonTradingDepotBlockEntity.class, be -> {
-            TransportedItemStack tis = new TransportedItemStack(Items.FLINT.getDefaultInstance().copyWithCount(32));
+            TransportedItemStack tis = new TransportedItemStack(ItemCopyWithCount.of(Items.FLINT.getDefaultInstance(), 32));
             tis.insertedFrom = Direction.SOUTH;
             be.getCommonTradingDepotBehaviour().getIncoming()
                 .add(tis);
@@ -106,7 +107,6 @@ public class TradingDepotScenes {
         
         scene.markAsFinished();
     }
-    
     
     public static void trading_double(SceneBuilder scene, SceneBuildingUtil util) {
         scene.title("trading_depot_double_trading", "Trading with multiple trading depots");
@@ -162,7 +162,7 @@ public class TradingDepotScenes {
             new BlockPos(3, 2, 0), Direction.NORTH, Items.EMERALD.getDefaultInstance()
         );
         scene.world.createItemOnBelt(
-            new BlockPos(0, 1, 3), Direction.WEST, Items.GRAVEL.getDefaultInstance().copyWithCount(10)
+            new BlockPos(0, 1, 3), Direction.WEST, ItemCopyWithCount.of(Items.GRAVEL.getDefaultInstance(), 10)
         );
         
         scene.idle(60);
@@ -213,7 +213,7 @@ public class TradingDepotScenes {
             tradingDepotBlockEntity.getCommonTradingDepotBehaviour().setOfferStack(ItemStack.EMPTY)
         );
         scene.world.modifyBlockEntity(new BlockPos(3, 2, 2), CommonTradingDepotBlockEntity.class, tradingDepotBlockEntity ->
-            tradingDepotBlockEntity.getCommonTradingDepotBehaviour().getResults().add(Items.FLINT.getDefaultInstance().copyWithCount(10))
+            tradingDepotBlockEntity.getCommonTradingDepotBehaviour().getResults().add(ItemCopyWithCount.of(Items.FLINT.getDefaultInstance(), 10))
         );
         
         scene.idle(20);
@@ -232,7 +232,7 @@ public class TradingDepotScenes {
         scene.world.modifyBlockEntity(new BlockPos(3, 2, 2), CommonTradingDepotBlockEntity.class, tradingDepotBlockEntity ->
             tradingDepotBlockEntity.getCommonTradingDepotBehaviour().getResults().clear()
         );
-        scene.world.createItemOnBelt(new BlockPos(2, 1, 2), Direction.EAST, Items.FLINT.getDefaultInstance().copyWithCount(10));
+        scene.world.createItemOnBelt(new BlockPos(2, 1, 2), Direction.EAST, ItemCopyWithCount.of(Items.FLINT.getDefaultInstance(), 10));
         
         scene.idle(20);
         

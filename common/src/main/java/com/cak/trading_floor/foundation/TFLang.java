@@ -3,7 +3,6 @@ package com.cak.trading_floor.foundation;
 import com.cak.trading_floor.TradingFloor;
 import com.simibubi.create.foundation.utility.LangBuilder;
 import com.simibubi.create.foundation.utility.LangNumberFormat;
-import io.github.fabricators_of_create.porting_lib.fluids.FluidStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -57,11 +56,6 @@ public class TFLang {
         return builder()
             .add(stack.getHoverName().copy().withStyle(ChatFormatting.GRAY))
             .add(text(" x" + stack.getCount()).style(ChatFormatting.GREEN));
-    }
-    
-    public static LangBuilder fluidName(FluidStack stack) {
-        return builder().add(stack.getDisplayName()
-            .copy());
     }
     
     public static LangBuilder number(double d) {

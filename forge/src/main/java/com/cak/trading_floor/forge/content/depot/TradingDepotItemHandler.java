@@ -1,6 +1,7 @@
 package com.cak.trading_floor.forge.content.depot;
 
 import com.cak.trading_floor.forge.content.depot.behavior.TradingDepotBehaviour;
+import com.cak.trading_floor.foundation.ItemCopyWithCount;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -41,13 +42,13 @@ public class TradingDepotItemHandler implements IItemHandler {
         int remaining = arg.getCount() - added;
         
         if (!bl) {
-            behaviour.setOfferStack(arg.copyWithCount(newCount));
+            behaviour.setOfferStack(ItemCopyWithCount.of(arg, newCount));
             if (newCount != oldCount)
                 behaviour.spinOfferOrSomething();
             behaviour.blockEntity.sendData();
         }
         
-        return arg.copyWithCount(remaining);
+        return ItemCopyWithCount.of(arg, remaining);
     }
     
     @Override
@@ -61,8 +62,8 @@ public class TradingDepotItemHandler implements IItemHandler {
         
         int extractedCount = Math.min(currentStack.getCount(), j);
         
-        ItemStack resultStack = currentStack.copyWithCount(extractedCount);
-        ItemStack remainderStack = currentStack.copyWithCount(currentStack.getCount() - extractedCount);
+        ItemStack resultStack = ItemCopyWithCount.of(currentStack, extractedCount);
+        ItemStack remainderStack = ItemCopyWithCount.of(currentStack, currentStack.getCount() - extractedCount);
         
         if (!bl) {
             this.behaviour.getResults().set(listIndex, remainderStack);

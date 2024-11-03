@@ -136,12 +136,12 @@ public class TradingDepotBlock extends CommonTradingDepotBlock implements IBE<Co
             return;
         if (!entityIn.isAlive())
             return;
-        if (entityIn.level().isClientSide)
+        if (entityIn.level.isClientSide)
             return;
         
         ItemEntity itemEntity = (ItemEntity) entityIn;
         DirectBeltInputBehaviour inputBehaviour =
-            BlockEntityBehaviour.get(worldIn, BlockPos.containing(entityIn.position().subtract(0, 0.1, 0)), DirectBeltInputBehaviour.TYPE);
+            BlockEntityBehaviour.get(worldIn, new BlockPos(entityIn.position().subtract(0, 0.1, 0)), DirectBeltInputBehaviour.TYPE);
         if (inputBehaviour == null)
             return;
         ItemStack remainder = inputBehaviour.handleInsertion(itemEntity.getItem(), Direction.DOWN, false);

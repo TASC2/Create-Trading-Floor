@@ -1,6 +1,7 @@
 package com.cak.trading_floor.content.trading_depot.displays;
 
 import com.cak.trading_floor.content.trading_depot.CommonTradingDepotBlockEntity;
+import com.cak.trading_floor.foundation.ItemCopyWithCount;
 import com.cak.trading_floor.foundation.TFLang;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.source.DisplaySource;
@@ -20,7 +21,7 @@ public class TradeProductSumDisplay extends DisplaySource {
         if (depot.getLastTrade() == null)
             return List.of(TFLang.translate("display_link.trading_depot.no_trade").component());
         
-        ItemStack stack = depot.getLastTrade().getResult().copyWithCount(depot.getTradeOutputSum());
+        ItemStack stack = ItemCopyWithCount.of(depot.getLastTrade().getResult(), depot.getTradeOutputSum());
         
         return List.of(TFLang.itemStack(stack).component());
     }

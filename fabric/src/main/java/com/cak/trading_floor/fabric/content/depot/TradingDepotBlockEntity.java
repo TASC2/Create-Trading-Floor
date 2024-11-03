@@ -5,6 +5,7 @@ import com.cak.trading_floor.content.trading_depot.behavior.CommonTradingDepotBe
 import com.cak.trading_floor.fabric.content.depot.behavior.TradingDepotBehaviour;
 import com.cak.trading_floor.fabric.content.depot.behavior.TradingDepotValueBox;
 import com.cak.trading_floor.foundation.AttachedTradingDepotFinder;
+import com.cak.trading_floor.foundation.ItemCopyWithCount;
 import com.cak.trading_floor.foundation.MerchantOfferInfo;
 import com.cak.trading_floor.foundation.TFLang;
 import com.cak.trading_floor.foundation.advancement.TFAdvancementBehaviour;
@@ -13,7 +14,6 @@ import com.cak.trading_floor.registry.TFParticleEmitters;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.LangBuilder;
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
@@ -24,7 +24,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -179,13 +178,13 @@ public class TradingDepotBlockEntity extends CommonTradingDepotBlockEntity imple
      */
     protected boolean tryTakeMerchantOffer(MerchantOffer offer, TradingDepotBehaviour costASource, List<TradingDepotBehaviour> costBSources) {
         //Quickly check if the A cost matches, if not don't bother with anything else
-        if (!ItemStack.isSameItem(offer.getBaseCostA(), costASource.getOfferStack())) return false;
+        if (!ItemStack.isSame(offer.getBaseCostA(), costASource.getOfferStack())) return false;
         
         //Check the second cost if it's there
         ItemStack totalCostBSource = ItemStack.EMPTY;
         if (!offer.getCostB().isEmpty()) {
             costBSources = costBSources.stream()
-                .filter(depot -> ItemStack.isSameItem(offer.getCostB(), depot.getOfferStack()))
+                .filter(depot -> ItemStack.isSame(offer.getCostB(), depot.getOfferStack()))
                 .toList();
             
             if (costBSources.isEmpty()) return false;
@@ -196,15 +195,15 @@ public class TradingDepotBlockEntity extends CommonTradingDepotBlockEntity imple
             
             if (offer.getCostB().getCount() > totalCostB) return false;
             
-            totalCostBSource = costBSources.get(0).getOfferStack().copyWithCount(totalCostB);
+            totalCostBSource = ItemCopyWithCount.of(costBSources.get(0).getOfferStack(), totalCostB);
         }
         
         //Check both match
         if (!satisfiedBaseCostBy(offer, costASource.getOfferStack(), totalCostBSource)) return false;
         
         //Perform transaction
-        costASource.setOfferStack(costASource.getOfferStack()
-            .copyWithCount(costASource.getOfferStack().getCount() - offer.getBaseCostA().getCount()));
+        costASource.setOfferStack(ItemCopyWithCount.of(costASource.getOfferStack(),
+            costASource.getOfferStack().getCount() - offer.getBaseCostA().getCount()));
         takeTotalFromSources(costBSources, offer.getCostB().getCount());
         
         costASource.getResults().add(offer.assemble());
@@ -223,7 +222,7 @@ public class TradingDepotBlockEntity extends CommonTradingDepotBlockEntity imple
             int currentCount = costSource.getOfferStack().getCount();
             int extractCount = Math.min(totalExtractCount, currentCount);
             
-            costSource.setOfferStack(costSource.getOfferStack().copyWithCount(currentCount - extractCount));
+            costSource.setOfferStack(ItemCopyWithCount.of(costSource.getOfferStack(), currentCount - extractCount));
             
             totalExtractCount -= extractCount;
             i++;
@@ -330,7 +329,7 @@ public class TradingDepotBlockEntity extends CommonTradingDepotBlockEntity imple
             return true;
         }
         ItemStack itemstack = available.copy();
-        return ItemStack.isSameItem(itemstack, cost) && (!cost.hasTag() || itemstack.hasTag() && NbtUtils.compareNbt(cost.getTag(), itemstack.getTag(), false));
+        return ItemStack.isSame(itemstack, cost) && (!cost.hasTag() || itemstack.hasTag() && NbtUtils.compareNbt(cost.getTag(), itemstack.getTag(), false));
     }
     
     public boolean hasInputStack() {

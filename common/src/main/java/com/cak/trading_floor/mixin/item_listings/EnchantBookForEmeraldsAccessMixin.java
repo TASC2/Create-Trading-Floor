@@ -2,7 +2,7 @@ package com.cak.trading_floor.mixin.item_listings;
 
 import com.cak.trading_floor.compat.jei.virtual_recipes.potential_villager_trade.PotentialMerchantOfferInfo;
 import com.cak.trading_floor.foundation.access.ResolvableItemListing;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -19,7 +19,7 @@ public class EnchantBookForEmeraldsAccessMixin implements ResolvableItemListing 
     
     @Override
     public @Nullable PotentialMerchantOfferInfo create_trading_floor$resolve() {
-        List<Enchantment> enchantments = BuiltInRegistries.ENCHANTMENT.stream().filter(Enchantment::isTradeable).toList();
+        List<Enchantment> enchantments = Registry.ENCHANTMENT.stream().filter(Enchantment::isTradeable).toList();
         
         List<ItemStack> booksList = new ArrayList<>();
         

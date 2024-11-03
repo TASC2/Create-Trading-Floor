@@ -1,6 +1,6 @@
 package com.cak.trading_floor.foundation.fabric;
 
-import net.fabricmc.fabric.api.entity.FakePlayer;
+import io.github.fabricators_of_create.porting_lib.fake_players.FakePlayer;
 import net.minecraft.world.entity.LivingEntity;
 
 public class TFPlatformPredicatesImpl {

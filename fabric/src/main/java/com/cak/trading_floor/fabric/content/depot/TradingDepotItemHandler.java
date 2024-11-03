@@ -1,6 +1,7 @@
 package com.cak.trading_floor.fabric.content.depot;
 
 import com.cak.trading_floor.fabric.content.depot.behavior.TradingDepotBehaviour;
+import com.cak.trading_floor.foundation.ItemCopyWithCount;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
@@ -59,7 +60,7 @@ public class TradingDepotItemHandler implements Storage<ItemVariant> {
         
         int extractedCount = (int) Math.min(currentStack.getCount(), maxAmount);
         
-        ItemStack remainderStack = currentStack.copyWithCount(currentStack.getCount() - extractedCount);
+        ItemStack remainderStack = ItemCopyWithCount.of(currentStack, currentStack.getCount() - extractedCount);
         int finalTargetIndex = targetIndex;
         transaction.addCloseCallback((context, result) -> {
             if (result.wasCommitted()) {
@@ -136,7 +137,7 @@ public class TradingDepotItemHandler implements Storage<ItemVariant> {
             transactionContext.addCloseCallback((transaction, result) -> {
                 if (result.wasAborted()) return;
                 int newCurrentCount = current.getCount() - extracted;
-                ItemStack newCurrent = current.copyWithCount(newCurrentCount);
+                ItemStack newCurrent = ItemCopyWithCount.of(current, newCurrentCount);
                 behaviour.getResults().set(pos, newCurrent);
                 behaviour.queueResultStackPrune();
                 behaviour.blockEntity.sendData();

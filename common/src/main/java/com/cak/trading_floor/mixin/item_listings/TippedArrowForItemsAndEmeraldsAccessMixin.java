@@ -1,8 +1,9 @@
 package com.cak.trading_floor.mixin.item_listings;
 
 import com.cak.trading_floor.compat.jei.virtual_recipes.potential_villager_trade.PotentialMerchantOfferInfo;
+import com.cak.trading_floor.foundation.ItemCopyWithCount;
 import com.cak.trading_floor.foundation.access.ResolvableItemListing;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -31,15 +32,15 @@ public class TippedArrowForItemsAndEmeraldsAccessMixin implements ResolvableItem
     
     @Override
     public @Nullable PotentialMerchantOfferInfo create_trading_floor$resolve() {
-        List<Potion> list = BuiltInRegistries.POTION.stream()
+        List<Potion> list = Registry.POTION.stream()
             .filter((potion) -> !potion.getEffects().isEmpty() && PotionBrewing.isBrewablePotion(potion))
             .toList();
         
-        ItemStack toItemBase = toItem.copyWithCount(toCount);
+        ItemStack toItemBase = ItemCopyWithCount.of(toItem, toCount);
         
         return new PotentialMerchantOfferInfo(
-            Items.EMERALD.getDefaultInstance().copyWithCount(emeraldCost),
-            fromItem.getDefaultInstance().copyWithCount(fromCount),
+            ItemCopyWithCount.of(Items.EMERALD.getDefaultInstance(), emeraldCost),
+            ItemCopyWithCount.of(fromItem.getDefaultInstance(), fromCount),
             list.stream().map(potion -> PotionUtils.setPotion(toItemBase.copy(), potion)).toList()
         );
     }

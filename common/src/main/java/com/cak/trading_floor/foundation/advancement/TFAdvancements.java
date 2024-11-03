@@ -5,20 +5,22 @@ import com.cak.trading_floor.registry.TFRegistry;
 import com.google.common.collect.Sets;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
+
+import static com.cak.trading_floor.TradingFloor.LOGGER;
 
 /**
  * Package-private class avoidance, Name isn't shortened to make it clear the ownership
@@ -52,16 +54,15 @@ public class TFAdvancements implements DataProvider {
     
     // Datagen
     
-    private final PackOutput output;
+    private final DataGenerator output;
     
-    public TFAdvancements(PackOutput output) {
+    public TFAdvancements(DataGenerator output) {
         this.output = output;
     }
     
     @Override
-    public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cache) {
-        PackOutput.PathProvider pathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "advancements");
-        List<CompletableFuture<?>> futures = new ArrayList<>();
+    public void run(@NotNull CachedOutput cache) {
+        DataGenerator.PathProvider pathProvider = output.createPathProvider(DataGenerator.Target.DATA_PACK, "advancements");
         
         Set<ResourceLocation> set = Sets.newHashSet();
         Consumer<Advancement> consumer = (advancement) -> {
@@ -69,14 +70,17 @@ public class TFAdvancements implements DataProvider {
             if (!set.add(id))
                 throw new IllegalStateException("Duplicate advancement " + id);
             Path path = pathProvider.json(id);
-            futures.add(DataProvider.saveStable(cache, advancement.deconstruct()
-                .serializeToJson(), path));
+            
+            try {
+                DataProvider.saveStable(cache, advancement.deconstruct()
+                    .serializeToJson(), path);
+            } catch (IOException ioexception) {
+                LOGGER.error("Couldn't save advancement {}", path, ioexception);
+            }
         };
         
         for (TFAdvancement advancement : ENTRIES)
             advancement.save(consumer);
-        
-        return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
     }
     
     @Override
@@ -90,7 +94,7 @@ public class TFAdvancements implements DataProvider {
     }
     
     public static void register() {
-        TradingFloor.LOGGER.info("Registering Advancements for: " + TradingFloor.NAME);
+        LOGGER.info("Registering Advancements for: " + TradingFloor.NAME);
     }
     
 }

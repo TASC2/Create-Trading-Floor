@@ -1,6 +1,7 @@
 package com.cak.trading_floor.mixin.item_listings;
 
 import com.cak.trading_floor.compat.jei.virtual_recipes.potential_villager_trade.PotentialMerchantOfferInfo;
+import com.cak.trading_floor.foundation.ItemCopyWithCount;
 import com.cak.trading_floor.foundation.access.ResolvableItemListing;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -19,7 +20,7 @@ public class EnchantedItemForEmeraldsAccessMixin implements ResolvableItemListin
     @Override
     public @Nullable PotentialMerchantOfferInfo create_trading_floor$resolve() {
         return new PotentialMerchantOfferInfo(
-            Items.EMERALD.getDefaultInstance().copyWithCount(baseEmeraldCost),
+            ItemCopyWithCount.of(Items.EMERALD.getDefaultInstance(), baseEmeraldCost),
             ItemStack.EMPTY,
             itemStack
         ).withImpliedEnchantVariants();
