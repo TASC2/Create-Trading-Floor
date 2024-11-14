@@ -258,7 +258,10 @@ public class TradingDepotBehaviour extends BlockEntityBehaviour implements Commo
     }
     
     public void setOfferStack(ItemStack input) {
-        this.offer.stack = input;
+        if (this.offer != null)
+            this.offer.stack = input;
+        else
+            this.offer = new TransportedItemStack(input);
     }
     
     
