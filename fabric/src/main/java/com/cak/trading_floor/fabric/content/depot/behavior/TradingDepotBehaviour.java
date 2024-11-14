@@ -33,7 +33,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING;
 
